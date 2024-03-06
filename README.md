@@ -4,7 +4,7 @@ MEMSA is a mutltiple sequence alignment (MSA) tool, which identifies maximum exa
 
 ## Installation
 
-
+In order for the tool to be used, slaMEM needs to be installed into the slaMEM directory and MAFFT also needs to be present. These tools can be installed manually or using the installation script (install.sh).
 
 ## Usage
 
