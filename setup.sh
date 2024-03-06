@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir temp
+
 # download and install slaMEM
 curl -L -O https://github.com/fjdf/slaMEM/archive/master.zip
 unzip master.zip
