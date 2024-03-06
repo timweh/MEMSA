@@ -2,6 +2,11 @@
 
 MEMSA is a mutltiple sequence alignment (MSA) tool, which identifies maximum exact matches (MEMs) before applying a traditional MSA algorithm, in order to speed up the alignment process. It was developed to investigate the effects of this heuristic on computation time and alignment accuracy and demonstrates that the preprocessing step can indeed positively impact the alignment of genomic sequences.
 
+## Requirements
+
+This tool was developed for MacOS and Linux.
+In order to built it, the gcc compiler needs to be installed
+
 ## Installation
 
 In order for the tool to be used, [slaMEM](https://github.com/fjdf/slaMEM) needs to be installed into the slaMEM directory and [MAFFT](https://mafft.cbrc.jp/alignment/software/) into the mafft directory. In order to install independencies and create all required subdirectories, the setup.sh script needs to be called before running MEMSA for the first time.
