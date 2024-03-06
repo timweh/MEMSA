@@ -163,7 +163,7 @@ class ReadMEMs {
 
 void readFasta(string file_name, vector<string>& seq_names, vector<string>& sequences) {
     fstream fileInput;
-    fileInput.open(file_name, ios::in);
+    fileInput.open(directory + file_name, ios::in);
     if (fileInput.is_open()) {
         string line;
         while (getline(fileInput, line)) {
@@ -191,7 +191,7 @@ void readFasta(string file_name, vector<string>& sequences) {
 
 void writeFasta(string file_name, vector<string>& seq_names, vector<string>& sequences) {
     fstream fileOutput;
-    fileOutput.open(file_name, ios::out);
+    fileOutput.open(directory + file_name, ios::out);
     if (fileOutput.is_open()) {
         for (int i = 0; i < sequences.size(); i++) {
             fileOutput << seq_names.at(i) << endl;
@@ -365,11 +365,14 @@ void performMafft() {
     ifstream if_ref(directory+ref_file_name, ios_base::binary);
     ifstream if_read(directory+read_file_name, ios_base::binary);
     ofstream of_all(directory+"all.fa", ios_base::binary);
-    of_all << if_ref.rdbuf() << if_read.rdbuf();
+    of_all << if_ref.rdbuf() << endl << if_read.rdbuf();
+    if_ref.close();
+    if_read.close();
+    of_all.close();
 
     // --- EXECUTE MAFFT ---
-
-    system(("mafft " + directory + "all.fa > alignment.fa").c_str());
+    system((directory + "mafft/mafft.bat " + directory + "all.fa > " + directory + "alignment.fa").c_str());
+    //system(("mafft " + directory + "all.fa > " + directory + "alignment.fa").c_str());
 }
 
 void performMEMSA() {
@@ -380,7 +383,7 @@ void performMEMSA() {
     // ---------- LOAD MEM INDICES FROM TXT FILE ----------
 
     fstream indexFileInput;
-    indexFileInput.open("temp/temp_mems.txt", ios::in);
+    indexFileInput.open(directory + "temp/temp_mems.txt", ios::in);
     if(indexFileInput.is_open()) {
         string line;
         while (getline(indexFileInput, line)) {
@@ -509,7 +512,8 @@ void performMEMSA() {
                 writeFasta("temp/temp_sseq.fa", seq_names, sseq);
 
                 // --- CALL MSA ALGORITHM ---
-                system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
+                system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
+                //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
                 // --- READ MSA OUTPUT FILE ---
                 sseq.clear();
@@ -527,7 +531,8 @@ void performMEMSA() {
         writeFasta("temp/temp_sseq.fa", seq_names, sseq);
 
         // --- CALL MSA ALGORITHM ---
-        system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
+        system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
+        //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
@@ -557,7 +562,8 @@ void performMEMSA() {
         writeFasta("temp/temp_sseq.fa", seq_names, sseq);
 
         // --- CALL MSA ALGORITHM ---
-        system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
+        system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
+        //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
@@ -576,7 +582,8 @@ void performMEMSA() {
                 writeFasta("temp/temp_sseq.fa", seq_names, sseq);
 
                 // --- CALL MSA ALGORITHM ---
-                system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
+                system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
+                //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
                 // --- READ MSA OUTPUT FILE ---
                 sseq.clear();
@@ -594,7 +601,8 @@ void performMEMSA() {
         writeFasta("temp/temp_sseq.fa", seq_names, sseq);
 
         // --- CALL MSA ALGORITHM ---
-        system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
+        system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
+        //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
@@ -612,13 +620,12 @@ void performMEMSA() {
 
 int main(int argc, char* argv[])
 {
-
     directory = argv[0];
     directory = directory.substr(0,directory.length()-5);
 
     string argument;
     if (argc > 1) {
-        for (int i = 1; i < sizeof(argv); i++) {
+        for (int i = 1; i < argc; i++) {
             argument = argv[i];
             if (argument.at(0) == '-') {
                 switch (argument.at(1))
@@ -645,11 +652,11 @@ int main(int argc, char* argv[])
                     break;                 
                 default:
                     cerr << "[ERROR] INCORRECT ARGUMENTS" << endl;
-                    throw 1;
+                    return 1;
                 }
             } else {
                 cerr << "[ERROR] INCORRECT ARGUMENTS" << endl;
-                throw 1;
+                return 1;
             }
         }
     }
