@@ -372,7 +372,6 @@ void performMafft() {
 
     // --- EXECUTE MAFFT ---
     system((directory + "mafft/mafft.bat " + directory + "all.fa > " + directory + "alignment.fa").c_str());
-    //system(("mafft " + directory + "all.fa > " + directory + "alignment.fa").c_str());
 }
 
 void performMEMSA() {
@@ -513,7 +512,6 @@ void performMEMSA() {
 
                 // --- CALL MSA ALGORITHM ---
                 system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
-                //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
                 // --- READ MSA OUTPUT FILE ---
                 sseq.clear();
@@ -532,7 +530,6 @@ void performMEMSA() {
 
         // --- CALL MSA ALGORITHM ---
         system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
-        //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
@@ -563,7 +560,6 @@ void performMEMSA() {
 
         // --- CALL MSA ALGORITHM ---
         system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
-        //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
@@ -583,7 +579,6 @@ void performMEMSA() {
 
                 // --- CALL MSA ALGORITHM ---
                 system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
-                //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
                 // --- READ MSA OUTPUT FILE ---
                 sseq.clear();
@@ -602,7 +597,6 @@ void performMEMSA() {
 
         // --- CALL MSA ALGORITHM ---
         system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
-        //system("mafft temp/temp_sseq.fa > temp/temp_msa.fa");
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
