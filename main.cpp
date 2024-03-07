@@ -399,6 +399,11 @@ void performMEMSA() {
         indexFileInput.close();
     }
 
+    if (reads.empty()) {
+        cerr << "[ERROR] PAIRWISE SEED IDENTIFICATION FAILED" << endl;
+        throw 0;
+    }
+
     // ---------- FIND COMMON SEEDS ----------
 
     vector<int> start;
@@ -416,7 +421,7 @@ void performMEMSA() {
     }
 
     if (start.empty()) {
-        cerr << "[ERROR] NO COMMON SEEDS FOUND" << endl;
+        cerr << "[ERROR] NO CONSISTENT SEEDS FOUND ACROSS ALL SEQUENCES" << endl;
         throw 0;
     }
 
