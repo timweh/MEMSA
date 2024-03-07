@@ -20,7 +20,7 @@ The installation script downloads the required dependencies [slaMEM](https://git
 
 ### Usage
 ```bash
-./memsa <options>
+./memsa (<options>)
 ```
 
 To run MEMSA for the provided example files and default parameters, just run `./memsa`
@@ -38,3 +38,5 @@ To run MEMSA for the provided example files and default parameters, just run `./
 ./memsa -s 50 -g 0
 ./memsa -r ref.fa -i sequences.fa -o result.fa
 ```
+
+For the (extremely simple) example files provided, one can observe that for a minimum seed length `-s` of 5-8, MEMSA finds exactly one common seed across all sequences. For smaller seed sizes, the potential seeds are not consistent (duplicate and/or out of order) whereas for larger seed sizes, not a single seed present in all sequences is found.
