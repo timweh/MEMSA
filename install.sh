@@ -14,6 +14,9 @@ if [ $os == 'Linux' ]; then
     curl -L -O https://github.com/fjdf/slaMEM/archive/master.tar.gz
     tar -xf master.tar.gz
     rm master.tar.gz
+    mv slaMEM-master slaMEM
+    cd slaMEM
+    gcc -Wall -Wextra -Wunused -mpopcnt -Wuninitialized -O9 -fomit-frame-pointer -fcommon *.c -o slaMEM -lm
 elif [ $os == 'Darwin' ]; then # MacOS
     # download and install MAFFT
     curl -L -O https://mafft.cbrc.jp/alignment/software/mafft-7.520-mac.zip?signed
@@ -24,12 +27,10 @@ elif [ $os == 'Darwin' ]; then # MacOS
     curl -L -O https://github.com/fjdf/slaMEM/archive/master.zip
     unzip master.zip
     rm master.zip
+    mv slaMEM-master slaMEM
+    cd slaMEM
+    make
 else
     echo 'OS not supported'
     exit 1
 fi
-# finish slaMEM installation
-mv slaMEM-master slaMEM
-cd slaMEM
-make
-cd ..
