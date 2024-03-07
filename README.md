@@ -5,7 +5,7 @@ MEMSA is a mutltiple sequence alignment (MSA) tool, which identifies maximum exa
 ## Requirements
 
 This tool was developed for MacOS and Linux.
-In order to built it, the gcc compiler needs to be installed
+In order to built it, the gcc compiler needs to be installed.
 
 ## Installation
 
@@ -23,10 +23,30 @@ The tool takes two fasta files as input. One is the reference file and must cont
 
 The code can be executed by putting an arbitrary reference sequence in the reference.fa file and putting the other sequences to be aligned in the input.fa file. The generated alignment will be written into the alignment.fa file.
 
-To run MEMSA for the provided example files and default parameters, just run:
+To run MEMSA for the provided example files and default parameters, just run `./memsa`
 
-```./memsa```
+### Manual
 
-which is equivalent to running
+#### Install
+```bash
+./install.sh
+```
 
-```./memsa -r reference.fa -i input.fa -s 20 -g 1```
+#### Usage
+```bash
+./memsa <options>
+```
+
+##### Options:
+- `s`   : minimum seed length (default=20)
+- `g`   : maximum merge gap (default=1)
+- `r`   : reference file name (default="reference.fa")
+- `i`   : input file name (default="input.fa")
+- `o`   : output file name (default="alignment.fa")
+
+##### Example:
+```bash
+./memsa
+./memsa -s 50 -g 0
+./memsa -r ref.fa -i sequences.fa -o result.fa
+```
