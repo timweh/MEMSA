@@ -617,9 +617,9 @@ int main(int argc, char* argv[])
 {
     directory = argv[0];
     directory = directory.substr(0,directory.length()-5);
-    ref_file_name = "reference.fa";
-    read_file_name = "input.fa";
-    res_file_name = "alignment.fa";
+    ref_file_name = directory + "reference.fa";
+    read_file_name = directory + "input.fa";
+    res_file_name = directory + "alignment.fa";
 
     string argument;
     if (argc > 1) {
