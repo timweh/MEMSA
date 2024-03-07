@@ -9,7 +9,7 @@ if [ $os == 'Linux' ]; then
     curl -L -O https://mafft.cbrc.jp/alignment/software/mafft-7.520-linux.tgz
     tar xfvz mafft-7.520-linux.tgz
     rm mafft-7.520-linux.tgz
-    mv mafft-linux mafft
+    mv mafft-linux64 mafft
     # download and install slaMEM
     curl -L -O https://github.com/fjdf/slaMEM/archive/master.tar.gz
     tar -xf master.tar.gz
