@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
+#include <vector>
+#include <algorithm>
+#include <string>
 using namespace std;
 
 string directory;
