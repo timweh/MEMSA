@@ -3,10 +3,11 @@
 #include <chrono>
 using namespace std;
 
-string directory = "";
+string directory;
+string ref_file_name;
+string read_file_name;
+string res_file_name;
 
-string ref_file_name = "reference.fa";
-string read_file_name = "input.fa";
 int min_seed_size = 20;
 int max_merge_gap = 1;
 
@@ -163,7 +164,7 @@ class ReadMEMs {
 
 void readFasta(string file_name, vector<string>& seq_names, vector<string>& sequences) {
     fstream fileInput;
-    fileInput.open(directory + file_name, ios::in);
+    fileInput.open(file_name, ios::in);
     if (fileInput.is_open()) {
         string line;
         while (getline(fileInput, line)) {
@@ -191,7 +192,7 @@ void readFasta(string file_name, vector<string>& sequences) {
 
 void writeFasta(string file_name, vector<string>& seq_names, vector<string>& sequences) {
     fstream fileOutput;
-    fileOutput.open(directory + file_name, ios::out);
+    fileOutput.open(file_name, ios::out);
     if (fileOutput.is_open()) {
         for (int i = 0; i < sequences.size(); i++) {
             fileOutput << seq_names.at(i) << endl;
@@ -362,22 +363,22 @@ void performMafft() {
 
     // --- COMBINE INPUT FILES INTO SINGLE FILE ---
 
-    ifstream if_ref(directory+ref_file_name, ios_base::binary);
-    ifstream if_read(directory+read_file_name, ios_base::binary);
-    ofstream of_all(directory+"all.fa", ios_base::binary);
+    ifstream if_ref(ref_file_name, ios_base::binary);
+    ifstream if_read(read_file_name, ios_base::binary);
+    ofstream of_all(directory + "temp/all.fa", ios_base::binary);
     of_all << if_ref.rdbuf() << endl << if_read.rdbuf();
     if_ref.close();
     if_read.close();
     of_all.close();
 
     // --- EXECUTE MAFFT ---
-    system((directory + "mafft/mafft.bat " + directory + "all.fa > " + directory + "alignment.fa").c_str());
+    system((directory + "mafft/mafft.bat " + directory + "temp/all.fa > " + res_file_name).c_str());
 }
 
 void performMEMSA() {
     // ---------- CALL slaMEM TO GENERATE MEM SEEDS ----------
 
-    system((directory + "slaMEM/slaMEM -l " + to_string(min_seed_size) + " -o " + directory + "temp/temp_mems.txt " + directory + ref_file_name + " " + directory + read_file_name).c_str());
+    system((directory + "slaMEM/slaMEM -l " + to_string(min_seed_size) + " -o " + directory + "temp/temp_mems.txt " + ref_file_name + " " + read_file_name).c_str());
 
     // ---------- LOAD MEM INDICES FROM TXT FILE ----------
 
@@ -508,14 +509,14 @@ void performMEMSA() {
             if (reads.at(i).read_index(mstart.back()) != 0) {
                 extractSubsequences(-1, mstart.back(), sseq, false);
                 // --- CREATE SUBSEQUENCE FASTA FILES ---
-                writeFasta("temp/temp_sseq.fa", seq_names, sseq);
+                writeFasta(directory + "temp/temp_sseq.fa", seq_names, sseq);
 
                 // --- CALL MSA ALGORITHM ---
                 system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
 
                 // --- READ MSA OUTPUT FILE ---
                 sseq.clear();
-                readFasta("temp/temp_msa.fa", sseq);
+                readFasta(directory + "temp/temp_msa.fa", sseq);
                 for(int j = 0; j < sseq.size(); j++) {
                     transform(sseq.at(j).begin(), sseq.at(j).end(), sseq.at(j).begin(), ::toupper);
                     alignments.at(j).append(sseq.at(j));
@@ -526,14 +527,14 @@ void performMEMSA() {
     } else {
         extractSubsequences(-1, mstart.back(), sseq, false);
         // --- CREATE SUBSEQUENCE FASTA FILES ---
-        writeFasta("temp/temp_sseq.fa", seq_names, sseq);
+        writeFasta(directory + "temp/temp_sseq.fa", seq_names, sseq);
 
         // --- CALL MSA ALGORITHM ---
         system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
-        readFasta("temp/temp_msa.fa", sseq);
+        readFasta(directory + "temp/temp_msa.fa", sseq);
         for(int j = 0; j < sseq.size(); j++) {
             transform(sseq.at(j).begin(), sseq.at(j).end(), sseq.at(j).begin(), ::toupper);
             alignments.at(j).append(sseq.at(j));
@@ -556,7 +557,7 @@ void performMEMSA() {
         extractSubsequences(mend.at(i), mstart.at(i-1), sseq, false);
 
         // --- CREATE SUBSEQUENCE FASTA FILES ---
-        writeFasta("temp/temp_sseq.fa", seq_names, sseq);
+        writeFasta(directory + "temp/temp_sseq.fa", seq_names, sseq);
 
         // --- CALL MSA ALGORITHM ---
         system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
@@ -575,14 +576,14 @@ void performMEMSA() {
             if (reads.at(i).read_index(mend.at(0)) != sequences.at(i+1).size()-1) {
                 extractSubsequences(mend.at(0), -1, sseq, false);
                 // --- CREATE SUBSEQUENCE FASTA FILES ---
-                writeFasta("temp/temp_sseq.fa", seq_names, sseq);
+                writeFasta(directory + "temp/temp_sseq.fa", seq_names, sseq);
 
                 // --- CALL MSA ALGORITHM ---
                 system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
 
                 // --- READ MSA OUTPUT FILE ---
                 sseq.clear();
-                readFasta("temp/temp_msa.fa", sseq);
+                readFasta(directory + "temp/temp_msa.fa", sseq);
                 for(int j = 0; j < sseq.size(); j++) {
                     transform(sseq.at(j).begin(), sseq.at(j).end(), sseq.at(j).begin(), ::toupper);
                     alignments.at(j).append(sseq.at(j));
@@ -593,14 +594,14 @@ void performMEMSA() {
     } else {
         extractSubsequences(mend.at(0), -1, sseq, false);
         // --- CREATE SUBSEQUENCE FASTA FILES ---
-        writeFasta("temp/temp_sseq.fa", seq_names, sseq);
+        writeFasta(directory + "temp/temp_sseq.fa", seq_names, sseq);
 
         // --- CALL MSA ALGORITHM ---
         system((directory + "mafft/mafft.bat " + directory + "temp/temp_sseq.fa > " + directory + "temp/temp_msa.fa").c_str());
 
         // --- READ MSA OUTPUT FILE ---
         sseq.clear();
-        readFasta("temp/temp_msa.fa", sseq);
+        readFasta(directory + "temp/temp_msa.fa", sseq);
         for(int j = 0; j < sseq.size(); j++) {
             transform(sseq.at(j).begin(), sseq.at(j).end(), sseq.at(j).begin(), ::toupper);
             alignments.at(j).append(sseq.at(j));
@@ -609,13 +610,16 @@ void performMEMSA() {
 
     // ---------- WRITE COMBINED ALIGNMENT RESULTS INTO OUTPUT FILE ----------
 
-    writeFasta("alignment.fa", seq_names, alignments);
+    writeFasta(res_file_name, seq_names, alignments);
 }
 
 int main(int argc, char* argv[])
 {
     directory = argv[0];
     directory = directory.substr(0,directory.length()-5);
+    ref_file_name = "reference.fa";
+    read_file_name = "input.fa";
+    res_file_name = "alignment.fa";
 
     string argument;
     if (argc > 1) {
@@ -625,25 +629,20 @@ int main(int argc, char* argv[])
                 switch (argument.at(1))
                 {
                 case 's':
-                    argument = argv[++i];
-                    min_seed_size = stoi(argument);
+                    min_seed_size = stoi(argv[++i]);
                     break;
                 case 'g':
-                    argument = argv[++i];
-                    max_merge_gap = stoi(argument);
-                    break;  
-                case 'p':
-                    argument = argv[++i];
-                    directory = argument;
-                    break;     
+                    max_merge_gap = stoi(argv[++i]);
+                    break;
                 case 'r':
-                    argument = argv[++i];
-                    ref_file_name = argument;
-                    break;   
+                    ref_file_name = argv[++i];
+                    break;
                 case 'i':
-                    argument = argv[++i];
-                    read_file_name = argument;
-                    break;                 
+                    read_file_name = argv[++i];
+                    break;
+                case 'o':
+                    res_file_name = argv[++i];
+                    break;
                 default:
                     cerr << "[ERROR] INCORRECT ARGUMENTS" << endl;
                     return 1;
