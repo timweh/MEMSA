@@ -7,44 +7,32 @@ MEMSA is a mutltiple sequence alignment (MSA) tool, which identifies maximum exa
 This tool was developed for MacOS and Linux.
 In order to built it, the gcc compiler needs to be installed.
 
-## Installation
+## Manual
 
-In order for the tool to be used, [slaMEM](https://github.com/fjdf/slaMEM) needs to be installed into the slaMEM directory and [MAFFT](https://mafft.cbrc.jp/alignment/software/) into the mafft directory. In order to install independencies and create all required subdirectories, the setup.sh script needs to be called before running MEMSA for the first time.
+The tool can be executed by putting a single sequence in the reference FASTA-file and putting the all other sequences to be aligned in the input FASTA-file. The reference sequence can be picked arbitrarily from the dataset, as the choice of the reference does not affect the alignment. The generated alignment will be written into the output file.
 
-## Usage
-
-The tool takes two fasta files as input. One is the reference file and must contain a single sequence. All other sequences to be aligned go into the input file. The reference sequence can be picked arbitrarily from the dataset, as the choice of the reference does not affect the alignment. 
-
-### Input
-
-### Output
-
-### Command Line Arguments
-
-The code can be executed by putting an arbitrary reference sequence in the reference.fa file and putting the other sequences to be aligned in the input.fa file. The generated alignment will be written into the alignment.fa file.
-
-To run MEMSA for the provided example files and default parameters, just run `./memsa`
-
-### Manual
-
-#### Install
+### Install
 ```bash
 ./install.sh
 ```
 
-#### Usage
+The installation script downloads the required dependencies [slaMEM](https://github.com/fjdf/slaMEM) and [MAFFT](https://mafft.cbrc.jp/alignment/software/) and builds an executable from the source code.
+
+### Usage
 ```bash
 ./memsa <options>
 ```
 
-##### Options:
-- `s`   : minimum seed length (default=20)
-- `g`   : maximum merge gap (default=1)
-- `r`   : reference file name (default="reference.fa")
-- `i`   : input file name (default="input.fa")
-- `o`   : output file name (default="alignment.fa")
+To run MEMSA for the provided example files and default parameters, just run `./memsa`
 
-##### Example:
+#### Options:
+- `-s`   : minimum seed length (default=20)
+- `-g`   : maximum merge gap (default=1)
+- `-r`   : reference file name (default="reference.fa")
+- `-i`   : input file name (default="input.fa")
+- `-o`   : output file name (default="alignment.fa")
+
+#### Example:
 ```bash
 ./memsa
 ./memsa -s 50 -g 0
