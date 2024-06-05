@@ -34,8 +34,7 @@ To run MEMSA for the provided example files and default parameters, just run `./
 
 #### Example:
 ```bash
-./memsa
-./memsa -s 50 -g 0
+./memsa -s 5 -g 0
 ./memsa -r ref.fa -i sequences.fa -o result.fa
 ```
 
